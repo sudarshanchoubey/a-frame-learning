@@ -1,0 +1,63 @@
+<html>
+
+<head>
+    <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+    <script src="/js/aframe-environment-component.min.js"></script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <img id="boxTexture" src="https://i.imgur.com/mYmmbrp.jpg">
+            <audio src="https://cdn.aframe.io/basic-guide/audio/backgroundnoise.wav" autoplay
+            preload></audio>
+        </a-assets>
+        <a-box src="#boxTexture" position="0 2 -5" rotation="0 45 45" scale="1 1 1" scale-on-mouseenter="to: 2.2 2.2 2.2" descale-on-mouseleave="to: 1 1 1" moveleft>
+            <!--<a-animation attribute="position" to="0 2.2 -5" direction="alternate" dur="2000" repeat="indefinite"></a-animation>-->
+        </a-box>
+        <a-sound src="https://cdn.aframe.io/basic-guide/audio/backgroundnoise.wav" autoplay="true"
+        position="0 2 -5"></a-sound>
+        <a-camera>
+            <a-cursor></a-cursor>
+        </a-camera>
+        <a-entity environment="preset: forest; numDressing: 500"></a-entity>
+    </a-scene>
+</body>
+<script>
+    AFRAME.registerComponent('scale-on-mouseenter', {
+        schema: {
+            to: { default: '2.5 2.5 2.5' }
+        },
+
+        init: function () {
+            var data = this.data;
+            this.el.addEventListener('mouseenter', function () {
+                this.setAttribute('scale', data.to);
+            });
+        }
+    });
+    AFRAME.registerComponent('descale-on-mouseleave', {
+        schema: {
+            to: { default: '1 1 1' }
+        },
+
+        init: function () {
+            var data = this.data;
+            this.el.addEventListener('mouseleave', function () {
+                this.setAttribute('scale', data.to);
+            });
+        }
+    });
+    AFRAME.registerComponent('moveleft', {
+        tick: function (time, timeDelta) {
+            var currentPosition = this.el.object3D.position;
+            this.el.setAttribute('position', {
+                x: currentPosition.x + (0.4 * timeDelta / 1000),
+                y: currentPosition.y,
+                z: currentPosition.z
+            });
+        }
+    });
+</script>
+
+</html>
